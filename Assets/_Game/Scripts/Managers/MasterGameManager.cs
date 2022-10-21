@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
-public class GameManager : MonoBehaviourPun
+public class MasterGameManager : MonoBehaviourPun
 {
     [SerializeField] private NetworkManager netManager;
 
@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviourPun
     public List<string> PlayerList { get; private set; }
     public List<int> PlayerTablePositions { get; private set; }
 
-    public static GameManager Instance;
+    public static MasterGameManager Instance;
 
     public void MakeSingleton()
     {
@@ -34,5 +34,9 @@ public class GameManager : MonoBehaviourPun
     public void StartGame()
     {
         if (!photonView.IsMine) return;
+    }
+    public void RPCCall(string _rpcName, params object[] _params)//
+    {
+        photonView.RPC(_rpcName, PhotonNetwork.MasterClient, _params);
     }
 }
