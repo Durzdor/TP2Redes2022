@@ -5,3 +5,22 @@ Maxi
 
 Fer
 -
+
+Consignas
+Fecha de Entrega: 25/11/2022
+El juego deberá ser de al menos 4 jugadores incluyendo:
+● PunRPC
+● Control de animaciones
+● Photon Network
+● MasterManager en la cual corra 3 acciones como mínimo.
+● Photon Chat
+● Photon Voice
+Como consigna, además deberá:
+● El juego debe ser de 4 clientes, sin contar el master. 
+    A su vez, la cantidad de clientes conectados, para comenzar la partida, debe ser editable.
+● Tener una condición de victoria y derrota, y notificará a todos los usuarios de la misma.
+● El juego debe ser Full-Authoritative. No podrá haber ningún desfase entre el Master y los demás clientes.
+● Sincronizar al menos 10 objetos en escena simultáneamente y constantemente en los cuales 4 deben ser completamente diferentes. Ej:
+○ Timer (Seconds: float)
+○ Character (Position: Vector3, Rotation: Quaternion)
+○ Projectiles (Velocity: Vector3)
