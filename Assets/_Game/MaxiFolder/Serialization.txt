@@ -1,0 +1,85 @@
+Serialization
+
+public Transform obj (o usar la clase de model)
+public int hp
+public float speed
+public bool isAlive
+public string path -> para el nombre de subcarpeta ej saves
+public string filename
+
+public CharacterInfo dataTwo
+
+void Serealization
+
+characterinfo data = new characterinfo
+data.pos = obj.transform.position
+data.hp = hp
+data.speed = speed
+data.IsAlive = isAlive
+
+string gamefolder = application.datapath
+var realPath = Path.combine(gamefolder,path,filename + ".json")
+
+string json = jsonutility.tojson(data, true) -> bool es para que se formatee bien en el archivo
+
+//Directory.CreateDirectory(pathFolder) para crear una carpeta
+
+StreamWriter file = File.Createtext(realpath)
+file.write(json)
+file.Close()
+
+file.writealltext(realpath,json) -> es lo mismo que escribir las 3 lineas de arriba (crea, escribe, cierra)
+
+void Deserelization
+
+string gamefolder = application.datapath
+var realPath = Path.combine(gamefolder,path,filename + ".json")
+
+if !File.Exists(realpath) return
+
+StreamReader file = file.OpenText(realpath)
+string json = file.ReadToEnd()
+file.close()
+
+file.readalltext(realpath) -> los mismo que las 3 lineas de arriba pero en una funcion
+
+CharacterInfo data = JsonUtility.FromJson<CharacterInfo>(json)
+
+obj.transform.position = data.pos
+
+-Para poder utilizar monobehavior
+jsonutility.fromjsonoverwrite(json,datatwo)
+
+serealizationBin
+
+characterinfo data = new characterinfo
+data.pos = obj.transform.position
+data.hp = hp
+data.speed = speed
+data.IsAlive = isAlive
+
+string gamefolder = application.datapath
+var realPath = Path.combine(gamefolder,path,filename + ".bin")
+
+Filestream file = File.create(realpath)
+
+var formatter = new BinaryFormatter()
+formatter.serialize(file,data)
+file.close()
+
+deserealizationBin
+
+string gamefolder = application.datapath
+var realPath = Path.combine(gamefolder,path,filename + ".bin")
+
+if !file.exists return
+Filestream file = file.openread(realpath)
+
+var formatter = new BinaryFormatter()
+characterinfo data = (CharacterInfo)formatter.deserialize(file) -> hay que castear el tipo de archivo que es 
+
+obj.tranform.position = data.pos
+
+esto tira error porque vector3 de unity no es serializable para binario
+solucion 3 floats uno para cada coordenada o hacer un vector3 propio serializable
+

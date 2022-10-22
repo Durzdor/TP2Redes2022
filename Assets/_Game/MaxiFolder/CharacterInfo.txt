@@ -1,0 +1,12 @@
+CharacterInfo
+
+[System.Serializable] para no agregar using System
+class sin monobehaviour
+
+public vector3 pos
+public int hp
+public float speed
+[serializefield] private bool _isAlive
+
+IsAlive => get isAlive set isAlive
+
