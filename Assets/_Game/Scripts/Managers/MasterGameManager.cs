@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 
 public class MasterGameManager : MonoBehaviourPun
 {
     [SerializeField] private NetworkManager netManager;
+    public int listCount;
+    List<Player> PlayerList = new List<Player>();
 
-
-    public List<string> PlayerList { get; private set; }
+    public int minPlayerToStart;
     public List<int> PlayerTablePositions { get; private set; }
 
     public static MasterGameManager Instance;
@@ -27,16 +29,24 @@ public class MasterGameManager : MonoBehaviourPun
         }
     }
 
-    private void Awake()
+    void Awake()
     {
         MakeSingleton();
     }
-    public void StartGame()
+    void Start()
     {
-        if (!photonView.IsMine) return;
+        netManager.OnPlayerConnect += PlayerConnected;
     }
-    public void RPCCall(string _rpcName, params object[] _params)//
+    private void Update()
+    {
+        listCount = PlayerList.Count;
+    }
+    public void RPCCall(string _rpcName, params object[] _params)
     {
         photonView.RPC(_rpcName, PhotonNetwork.MasterClient, _params);
+    }
+    public void PlayerConnected(Player player)
+    {
+        PlayerList.Add(player);
     }
 }
