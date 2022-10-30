@@ -11,8 +11,8 @@ public class MasterGameManager : MonoBehaviourPun
     List<Player> PlayerList = new List<Player>();
 
     public int minPlayerToStart;
-    public event Action ReadyToStartGame;
-    public event Action<List<Player>> NewPlayerAdded;
+    public event Action<bool> ReadyToStartGame;
+    public event Action<List<Player>> UpdatedPlayerList;
 
     public static MasterGameManager Instance;
     public void MakeSingleton()
@@ -35,6 +35,7 @@ public class MasterGameManager : MonoBehaviourPun
     void Start()
     {
         NetworkManager.Instance.OnPlayerConnect += PlayerConnected;
+        NetworkManager.Instance.OnPlayerDisconnect += PlayerDisconnected;
         if (!PhotonNetwork.LocalPlayer.IsMasterClient)
             return;
     }
@@ -50,14 +51,22 @@ public class MasterGameManager : MonoBehaviourPun
     {
         RPCMasterCall("PlayerConnectedRPC", player);
     }
+    public void PlayerDisconnected(Player player)
+    {
+        RPCMasterCall("PlayerDisconnectedRPC", player);
+    }
     [PunRPC]
     void PlayerConnectedRPC(Player player)
     {
         PlayerList.Add(player);
-        NewPlayerAdded?.Invoke(PlayerList);
-        if (PlayerList.Count >= minPlayerToStart)
-        {
-            ReadyToStartGame?.Invoke();
-        }
+        UpdatedPlayerList?.Invoke(PlayerList);
+        ReadyToStartGame?.Invoke(PlayerList.Count >= minPlayerToStart);
+    }
+    [PunRPC]
+    void PlayerDisconnectedRPC(Player player)
+    {
+        PlayerList.Remove(player);
+        UpdatedPlayerList?.Invoke(PlayerList);
+        ReadyToStartGame?.Invoke(PlayerList.Count >= minPlayerToStart);
     }
 }

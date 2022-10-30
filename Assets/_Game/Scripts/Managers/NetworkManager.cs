@@ -203,7 +203,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        OnRoomLeftSuccessfully?.Invoke();
+        OnPlayerDisconnect?.Invoke(otherPlayer);
     }
     bool IsNameUnique()
     {

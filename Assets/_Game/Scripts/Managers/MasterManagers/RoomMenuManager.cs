@@ -13,26 +13,43 @@ public class RoomMenuManager : MonoBehaviourPun
     [SerializeField] GameObject countDownLabel;
     [SerializeField] GameObject startGameButton;
     [SerializeField] GameObject[] playerSlots;
-    private int autoStartTimer = 25;
+    int autoStartTimer = 25;
+    Coroutine timer;
 
     void Start()
     {
         roomName.text = PhotonNetwork.CurrentRoom.Name;
         if (!PhotonNetwork.LocalPlayer.IsMasterClient)
             return;
-        MasterGameManager.Instance.ReadyToStartGame += StartCountDown;
-        MasterGameManager.Instance.NewPlayerAdded += UpdateList;
+        MasterGameManager.Instance.ReadyToStartGame += StartStopCountDown;
+        MasterGameManager.Instance.UpdatedPlayerList += UpdateList;
     }
-    public void StartCountDown()
+    public void StartStopCountDown(bool ready)
     {
-        photonView.RPC("ActivateCountDownObjects", RpcTarget.All);
-        StartCoroutine(Countdown(autoStartTimer));
+        if (ready)
+        {
+            photonView.RPC("ActivateCountDownObjects", RpcTarget.All);
+            timer = StartCoroutine(Countdown(autoStartTimer));
+        }
+        else
+        {
+            photonView.RPC("DeactivateCountDownObjects", RpcTarget.All);
+            StopCoroutine(timer);
+        }
     }
     public void UpdateList(List<Player> playerList)
     {
-        for (int i = 1; i < playerList.Count; i++)
+        for (int i = 0; i < playerSlots.Length; i++)
         {
-            photonView.RPC("SetPlayerName", RpcTarget.All, playerList[i], i - 1);
+            if (i < playerList.Count - 1)
+            {
+                photonView.RPC("UpdateListAddPlayer", RpcTarget.All, playerList[i + 1], i);
+
+            }
+            else
+            {
+                photonView.RPC("UpdateListRemovePlayer", RpcTarget.All, i);
+            }
         }
     }
     private IEnumerator Countdown(int duration)
@@ -48,11 +65,17 @@ public class RoomMenuManager : MonoBehaviourPun
         //Load level
     }
     [PunRPC]
-    public void SetPlayerName(Player player, int playerTextSlot)
+    void UpdateListAddPlayer(Player player, int playerTextSlot)
     {
         playerSlots[playerTextSlot].SetActive(true);
         TextMeshProUGUI nametext = playerSlots[playerTextSlot].GetComponentInChildren<TextMeshProUGUI>();
         nametext.text = player.NickName;
+    }
+    [PunRPC]
+    void UpdateListRemovePlayer(int playerTextSlot)
+    {
+        if (playerSlots[playerTextSlot].activeSelf)
+            playerSlots[playerTextSlot].SetActive(false);
     }
     [PunRPC]
     private void UpdateTimer(int count)
@@ -66,5 +89,13 @@ public class RoomMenuManager : MonoBehaviourPun
             countDownLabel.SetActive(true);
         if (!startGameButton.activeSelf)
             startGameButton.SetActive(true);
+    }
+    [PunRPC]
+    void DeactivateCountDownObjects()
+    {
+        if (countDownLabel.activeSelf)
+            countDownLabel.SetActive(false);
+        if (startGameButton.activeSelf)
+            startGameButton.SetActive(false);
     }
 }
