@@ -4,11 +4,12 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MasterGameManager : MonoBehaviourPun
 {
     public int listCount;
-    List<Player> PlayerList = new List<Player>();
+    List<Player> PlayerList = new List<Player>(); //diccionario de player que referencia modelo como hizo el profe
 
     public int minPlayerToStart;
     public event Action<bool> ReadyToStartGame;
@@ -42,6 +43,10 @@ public class MasterGameManager : MonoBehaviourPun
     private void Update()
     {
         listCount = PlayerList.Count;
+        if(PhotonNetwork.LevelLoadingProgress > 100)
+        {
+            Debug.Log($"Level Loaded {SceneManager.GetActiveScene().name}");
+        }
     }
     public void RPCMasterCall(string _rpcName, params object[] _params)
     {

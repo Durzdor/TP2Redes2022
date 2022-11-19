@@ -62,7 +62,12 @@ public class RoomMenuManager : MonoBehaviourPun
             photonView.RPC("UpdateTimer", RpcTarget.All, count);
         }
 
-        //Load level
+        photonView.RPC("LoadGameplayLevel", RpcTarget.All);
+    }
+    [PunRPC]
+    void LoadGameplayLevel()
+    {
+        PhotonNetwork.LoadLevel(2);
     }
     [PunRPC]
     void UpdateListAddPlayer(Player player, int playerTextSlot)
