@@ -1,18 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerModel : MonoBehaviour
+public class PlayerModel : MonoBehaviourPun
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] float speed;
+    Rigidbody2D rb;
+    private void Awake()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
-
-    // Update is called once per frame
-    void Update()
+    public void Move(Vector3 dir)
     {
-        
+        dir *= speed;
+        //rb.velocity = dir;
+        transform.position += dir;
+    }
+    public void PushAround()
+    {
+        //push mechanic
+        //play push animation
+    }
+    [PunRPC]
+    public void Dead()
+    {
+        PhotonNetwork.Destroy(gameObject);
     }
 }

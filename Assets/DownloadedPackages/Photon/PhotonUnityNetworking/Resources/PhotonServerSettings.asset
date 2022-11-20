@@ -47,6 +47,12 @@ MonoBehaviour:
   - UpdateListAddPlayer
   - UpdateListRemovePlayer
   - DeactivateCountDownObjects
+  - LoadGameplayLevel
+  - StartGameplay
+  - RemovePlayerChar
+  - RquestMove
+  - Dead
+  - RequestMove
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

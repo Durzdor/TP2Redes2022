@@ -13,7 +13,7 @@ public class RoomMenuManager : MonoBehaviourPun
     [SerializeField] GameObject countDownLabel;
     [SerializeField] GameObject startGameButton;
     [SerializeField] GameObject[] playerSlots;
-    int autoStartTimer = 25;
+    int autoStartTimer = 10;
     Coroutine timer;
 
     void Start()
@@ -28,22 +28,25 @@ public class RoomMenuManager : MonoBehaviourPun
     {
         if (ready)
         {
+            if (timer != null)
+                StopCoroutine(timer);
             photonView.RPC("ActivateCountDownObjects", RpcTarget.All);
             timer = StartCoroutine(Countdown(autoStartTimer));
         }
         else
         {
             photonView.RPC("DeactivateCountDownObjects", RpcTarget.All);
-            StopCoroutine(timer);
+            if (timer != null)
+                StopCoroutine(timer);
         }
     }
-    public void UpdateList(List<Player> playerList)
+    public void UpdateList()
     {
         for (int i = 0; i < playerSlots.Length; i++)
         {
-            if (i < playerList.Count - 1)
+            if (i < PhotonNetwork.PlayerList.Length - 1)
             {
-                photonView.RPC("UpdateListAddPlayer", RpcTarget.All, playerList[i + 1], i);
+                photonView.RPC("UpdateListAddPlayer", RpcTarget.All, PhotonNetwork.PlayerList[i + 1], i);
 
             }
             else
@@ -67,6 +70,8 @@ public class RoomMenuManager : MonoBehaviourPun
     [PunRPC]
     void LoadGameplayLevel()
     {
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.LoadLevel(2);
     }
     [PunRPC]
@@ -92,7 +97,7 @@ public class RoomMenuManager : MonoBehaviourPun
     {
         if (!countDownLabel.activeSelf)
             countDownLabel.SetActive(true);
-        if (!startGameButton.activeSelf)
+        if (!startGameButton.activeSelf && PhotonNetwork.IsMasterClient)
             startGameButton.SetActive(true);
     }
     [PunRPC]
@@ -100,7 +105,7 @@ public class RoomMenuManager : MonoBehaviourPun
     {
         if (countDownLabel.activeSelf)
             countDownLabel.SetActive(false);
-        if (startGameButton.activeSelf)
+        if (startGameButton.activeSelf && PhotonNetwork.IsMasterClient)
             startGameButton.SetActive(false);
     }
 }
