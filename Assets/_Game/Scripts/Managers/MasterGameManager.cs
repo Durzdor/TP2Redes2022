@@ -101,4 +101,13 @@ public class MasterGameManager : MonoBehaviourPun
             charModel.Move(dir);
         }
     }
+    [PunRPC]
+    void RequestShockWave(string client)
+    {
+        if (PlayerList.ContainsKey(client))
+        {
+            var charModel = PlayerList[client].GetComponent<PlayerModel>();
+            charModel.ShockWave();
+        }
+    }
 }

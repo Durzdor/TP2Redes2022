@@ -13,7 +13,7 @@ public class RoomMenuManager : MonoBehaviourPun
     [SerializeField] GameObject countDownLabel;
     [SerializeField] GameObject startGameButton;
     [SerializeField] GameObject[] playerSlots;
-    int autoStartTimer = 10;
+    int autoStartTimer = 5;
     Coroutine timer;
 
     void Start()
