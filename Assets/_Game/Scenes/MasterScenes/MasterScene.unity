@@ -1049,7 +1049,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce72a0866384b4442a118e9c5a174501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  netManager: {fileID: 1014322886}
   listCount: 0
   minPlayerToStart: 0
 --- !u!114 &591135144

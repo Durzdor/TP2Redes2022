@@ -16,8 +16,8 @@ public class PlayerClientController : MonoBehaviour
 
         Vector3 dir = new Vector3(h, v, 0);
         if (dir != Vector3.zero)
-        {
             MasterGameManager.Instance.RPCMasterCall("RequestMove", PhotonNetwork.LocalPlayer.NickName, dir);
-        }
+        if (Input.GetKeyDown(KeyCode.Space))
+            MasterGameManager.Instance.RPCMasterCall("RequestShockWave", PhotonNetwork.LocalPlayer.NickName);
     }
 }

@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class Instantiator : MonoBehaviour
 {
-    [SerializeField] Transform[] playersSpawnPoints;
+    [SerializeField] Transform[] spawnPoints;
     private void Awake()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -13,9 +13,10 @@ public class Instantiator : MonoBehaviour
     }
     void Start()
     {
+        GameObject ballObject = PhotonNetwork.Instantiate("Ball", spawnPoints[0].position, Quaternion.identity);
         for (int i = 1; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
         {
-            GameObject playerObject = PhotonNetwork.Instantiate("Player" + i.ToString(), playersSpawnPoints[i - 1].position, Quaternion.identity);
+            GameObject playerObject = PhotonNetwork.Instantiate("Player" + i.ToString(), spawnPoints[i].position, Quaternion.identity);
             MasterGameManager.Instance.AddPlayerCharacter(PhotonNetwork.PlayerList[i].NickName, playerObject);
         }
     }
