@@ -21,7 +21,7 @@ public class PostGameUIManager : MonoBehaviourPun
     [PunRPC]
     void UpdateWinner(int team1Score, int team2Score, int winner)
     {
-        winnerTeamText.text = "TEAM " + winner.ToString();
+        winnerTeamText.text = winner == 0 ? "BOTH!" : "TEAM " + winner.ToString();
         team1ScoreText.text = team1Score.ToString();
         team2ScoreText.text = team2Score.ToString();
     }

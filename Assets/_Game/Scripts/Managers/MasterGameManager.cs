@@ -87,6 +87,7 @@ public class MasterGameManager : MonoBehaviourPun
         gameplayUIManager.photonView.RPC("UpdateScores", RpcTarget.All, team1Goals, team2Goals);
 
         ballObject.transform.position = Vector3.zero;
+        ballObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
     public List<string> getPlayersName()
     {
