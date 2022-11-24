@@ -72,7 +72,7 @@ public class RoomMenuManager : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.LoadLevel(2);
+        PhotonNetwork.LoadLevel(3);
     }
     [PunRPC]
     void UpdateListAddPlayer(Player player, int playerTextSlot)
