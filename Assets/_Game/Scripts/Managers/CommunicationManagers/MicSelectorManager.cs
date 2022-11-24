@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Photon.Voice;
 using Photon.Voice.Unity;
+using TMPro;
 
 public class MicSelectorManager : MonoBehaviour
 {
-    public Recorder rec;
-    public Dropdown dropdown;
+    [SerializeField] private Recorder rec;
+    [SerializeField] private TMP_Dropdown dropdown;
     private void Awake()
     {
         var list = new List<string>(Microphone.devices);
@@ -15,8 +15,7 @@ public class MicSelectorManager : MonoBehaviour
     }
     public void SetMic(int i)
     {
-        //rec.UnityMicrophoneDevice = mic;
-        string mic = Microphone.devices[i];
+        var mic = Microphone.devices[i];
         rec.MicrophoneDevice = new DeviceInfo(mic);
     }
 }

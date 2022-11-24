@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class MicUI : MonoBehaviour
 {
-    public Image image;
+    [SerializeField] private Image image;
     public void Show(bool v)
     {
         image.enabled = v;

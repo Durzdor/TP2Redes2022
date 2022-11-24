@@ -1,10 +1,11 @@
 using Photon.Pun;
 using Photon.Voice.PUN;
 using Photon.Voice.Unity;
+using UnityEngine;
 
 public class VoiceUI : MonoBehaviourPun
 {
-    public Speaker speaker;
+    [SerializeField] private Speaker speaker;
     MicUI _micUI;
     void Start()
     {

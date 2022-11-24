@@ -6,7 +6,7 @@ using Photon.Realtime;
 
 public class VoiceChatUI : MonoBehaviour
 {
-    public TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI text;
     Dictionary<Speaker, Player> _dic = new Dictionary<Speaker, Player>();
     public void AddSpeaker(Speaker speaker, Player player)
     {
