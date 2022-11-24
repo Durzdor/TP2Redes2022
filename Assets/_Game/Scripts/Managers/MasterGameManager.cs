@@ -5,11 +5,16 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class MasterGameManager : MonoBehaviourPun
 {
+    int team1Goals = 0;
+    int team2Goals = 0;
+    GemplayUIManager gameplayUIManager;
+    GameObject ballObject;
     public int listCount;
-    Dictionary<string, GameObject> PlayerList = new Dictionary<string, GameObject>(); //diccionario de player que referencia modelo como hizo el profe
+    Dictionary<string, GameObject> PlayerList = new Dictionary<string, GameObject>();
 
     public int minPlayerToStart;
     public event Action<bool> ReadyToStartGame;
@@ -60,6 +65,48 @@ public class MasterGameManager : MonoBehaviourPun
     {
         PlayerList[key] = playerChar;
     }
+    public void SetBallObject(GameObject ball)
+    {
+        ballObject = ball;
+    }
+    public void AddTeamScore(int score, Goals.TeamGoal team)
+    {
+        switch (team)
+        {
+            case Goals.TeamGoal.Team1:
+                team2Goals += score;
+                break;
+            case Goals.TeamGoal.Team2:
+                team1Goals += score;
+                break;
+            default:
+                break;
+        }
+        if (!gameplayUIManager)
+            gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GemplayUIManager>();
+        gameplayUIManager.photonView.RPC("UpdateScores", RpcTarget.All, team1Goals, team2Goals);
+
+        ballObject.transform.position = Vector3.zero;
+        ballObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
+    public List<string> getPlayersName()
+    {
+        List<string> players = new List<string>();
+        foreach (var player in PlayerList)
+        {
+            players.Add(player.Key);
+        }
+        return players;
+    }
+    public (int, int, int) getPostGameScores()
+    {
+        int winner = 0;
+        if (team1Goals > team2Goals)
+            winner = 1;
+        if (team2Goals > team1Goals)
+            winner = 2;
+        return (team1Goals, team2Goals, winner);
+    }
     [PunRPC]
     void PlayerConnectedRPC(Player player)
     {
@@ -85,6 +132,9 @@ public class MasterGameManager : MonoBehaviourPun
         {
             photonView.RPC("RemovePlayerChar", RpcTarget.MasterClient, PlayerList[player.NickName].gameObject.name);
             PlayerList.Remove(player.NickName);
+            if (!gameplayUIManager)
+                gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GemplayUIManager>();
+            gameplayUIManager.UpdateTeamsNames();
         }
     }
     [PunRPC]

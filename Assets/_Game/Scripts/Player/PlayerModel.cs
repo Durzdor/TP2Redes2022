@@ -17,7 +17,7 @@ public class PlayerModel : MonoBehaviourPun
     public void Move(Vector3 dir)
     {
         dir *= speed;
-        transform.position += dir;
+        transform.position += dir * Time.deltaTime;
     }
     public void ShockWave()
     {
