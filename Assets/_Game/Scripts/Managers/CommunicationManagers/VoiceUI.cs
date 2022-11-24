@@ -6,18 +6,16 @@ using UnityEngine;
 public class VoiceUI : MonoBehaviourPun
 {
     [SerializeField] private Speaker speaker;
-    MicUI _micUI;
-    void Start()
+    private MicUI _micUI;
+
+    private void Start()
     {
         if (photonView.IsMine)
-        {
             _micUI = FindObjectOfType<MicUI>();
-        }
         else
-        {
             FindObjectOfType<VoiceChatUI>().AddSpeaker(speaker, photonView.Owner);
-        }
     }
+
     private void Update()
     {
         if (photonView.IsMine)

@@ -53,7 +53,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        content.text += "Connected to Chat." + "\n";
+        content.text += "Connected to Chat." + "\n" + "Use /w <target> <msg> to send private messages!" + "\n";
         _channel = PhotonNetwork.CurrentRoom.Name;
         _chatClient.Subscribe(_channel);
     }
@@ -118,5 +118,4 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         content.text += "<color=pink>" + "Target not valid." + "</color>" + "\n";
         inputField.text = "";
     }
-    
 }
