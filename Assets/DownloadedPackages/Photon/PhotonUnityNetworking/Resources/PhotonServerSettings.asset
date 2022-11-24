@@ -55,6 +55,9 @@ MonoBehaviour:
   - RequestMove
   - RequestShockWave
   - ShockWaveAnimation
+  - UpdateGamePlayTimer
+  - UpdateScores
+  - UpdateTeams
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
