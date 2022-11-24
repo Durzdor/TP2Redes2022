@@ -34,7 +34,7 @@ public class GemplayUIManager : MonoBehaviourPun
             photonView.RPC("UpdateGamePlayTimer", RpcTarget.All, count);
         }
 
-        // TimesUp
+        photonView.RPC("LoadGameplayLevel", RpcTarget.All);
     }
     public void UpdateTeamsNames()
     {
@@ -70,5 +70,10 @@ public class GemplayUIManager : MonoBehaviourPun
     {
         team1Players.text = team1;
         team2Players.text = team2;
+    }
+    [PunRPC]
+    void LoadGameplayLevel()
+    {
+        PhotonNetwork.LoadLevel(3);
     }
 }

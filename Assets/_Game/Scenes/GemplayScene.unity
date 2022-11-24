@@ -1191,7 +1191,7 @@ MonoBehaviour:
   team2Score: {fileID: 2032327901}
   team1Players: {fileID: 1505187908}
   team2Players: {fileID: 1009377900}
-  gamePlayTimer: 90
+  gamePlayTimer: 30
 --- !u!114 &521966069
 MonoBehaviour:
   m_ObjectHideFlags: 0

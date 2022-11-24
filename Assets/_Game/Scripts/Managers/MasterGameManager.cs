@@ -85,6 +85,8 @@ public class MasterGameManager : MonoBehaviourPun
         if (!gameplayUIManager)
             gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GemplayUIManager>();
         gameplayUIManager.photonView.RPC("UpdateScores", RpcTarget.All, team1Goals, team2Goals);
+
+        ballObject.transform.position = Vector3.zero;
     }
     public List<string> getPlayersName()
     {
@@ -94,6 +96,15 @@ public class MasterGameManager : MonoBehaviourPun
             players.Add(player.Key);
         }
         return players;
+    }
+    public (int, int, int) getPostGameScores()
+    {
+        int winner = 0;
+        if (team1Goals > team2Goals)
+            winner = 1;
+        if (team2Goals > team1Goals)
+            winner = 2;
+        return (team1Goals, team2Goals, winner);
     }
     [PunRPC]
     void PlayerConnectedRPC(Player player)
