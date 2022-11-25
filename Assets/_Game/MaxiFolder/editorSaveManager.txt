@@ -1,0 +1,21 @@
+editorSaveManager
+
+using unityEditor
+
+[CustomEditor(typeof(nombre de clase))]
+class : Editor
+
+override void oninspectorGUI -> no es igual a un update es medio random
+
+base.oninspectorGUI(); -> muestra lo default
+
+var obj = (nombre de clase) target
+
+if GUILayout.button("Save")
+
+obj.save
+
+if guilayout.button("load")
+
+obj.load
+

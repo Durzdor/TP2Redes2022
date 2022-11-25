@@ -1,7 +1,57 @@
 TO DO
 
 Maxi
--
+- Separar gamemanager para tipo de juego /futbol, tejo
+- Player movimiento por fisicas
+- Pelota movimiento por fisicas
+- Resorte que se mueve en las lineas superior e inferior que si colisiona con la pelota simula una pateada de player
+- Resorte se mueve por transform
+- Resorte sin collision con players
+- Arco con deteccion de pelota (hay gol en contra)
+- Arco tiene collision en los postes pero no en la red
+- Player pueden empujar a otros players
+- Player apreta tecla y patea la pelota segun donde esta haciendo colision
+- Boost tipo rocket league que se activan automaticamente apenas se agarran
+- Buscar assets top down futbol
+- Aviso de que equipo metio el gol y que solo pueda interactuar con el saque el equipo que fue goleado
+- Players se pueden empujar entre si
+- Pelota se puede empujar sin patear
+- Pelota no se sale de la cancha, pero los players pueden salir un poco mas para poder pegarle desde afuera
+- Hacer eventos para las cosas (quien mete gol, donde mete gol, quien gano la partida) asi se pueden mostrar en el chat
 
 Fer
--
+- Diccionario de referencias de jugadores
+- Que instancie los jugadores el gamemanager cuando comienza la partida
+- Agregar botones de Ready para poder empezar la partida cuando esten todos
+- Timer ingame ui
+- Goles de cada equipo ui
+- Win screen ui 
+- Jugadores tienen su nombre
+- Hacer que el tiempo se pueda frenar y resumir en cualquier momento (cuando se saca del centro esta frenado)
+- Ui para poner chat abajo de lo que se esta jugando
+
+Bonus
+- Room con seleccion de equipos
+- Controles antes del juego
+- Play again que te manda al room (esto despues de tener seleccion de equipos)
+- Master puede editar la duracion de la partida y la cantidad de goles requerida para ganar
+- Random teams
+
+Consignas
+Fecha de Entrega: 25/11/2022
+El juego deberá ser de al menos 4 jugadores incluyendo:
+● PunRPC
+● Control de animaciones
+● Photon Network
+● MasterManager en la cual corra 3 acciones como mínimo.
+● Photon Chat
+● Photon Voice
+Como consigna, además deberá:
+● El juego debe ser de 4 clientes, sin contar el master. 
+    A su vez, la cantidad de clientes conectados, para comenzar la partida, debe ser editable.
+● Tener una condición de victoria y derrota, y notificará a todos los usuarios de la misma.
+● El juego debe ser Full-Authoritative. No podrá haber ningún desfase entre el Master y los demás clientes.
+● Sincronizar al menos 10 objetos en escena simultáneamente y constantemente en los cuales 4 deben ser completamente diferentes. Ej:
+○ Timer (Seconds: float)
+○ Character (Position: Vector3, Rotation: Quaternion)
+○ Projectiles (Velocity: Vector3)
