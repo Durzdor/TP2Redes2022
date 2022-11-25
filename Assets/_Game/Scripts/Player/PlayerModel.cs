@@ -16,8 +16,9 @@ public class PlayerModel : MonoBehaviourPun
     }
     public void Move(Vector3 dir)
     {
-        dir *= speed;
-        transform.position += dir * Time.deltaTime;
+        //dir *= speed;
+        dir = Vector3.ClampMagnitude(dir, 1);
+        transform.position += dir * (speed * Time.deltaTime);
     }
     public void ShockWave()
     {
