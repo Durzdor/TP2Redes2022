@@ -140,7 +140,9 @@ public class MasterGameManager : MonoBehaviourPun
     [PunRPC]
     void RemovePlayerChar(string playerChar)
     {
-        PhotonNetwork.Destroy(GameObject.Find(playerChar));
+        GameObject charObj = GameObject.Find(playerChar);
+        if (charObj)
+            PhotonNetwork.Destroy(charObj);
     }
     [PunRPC]
     void RequestMove(string client, Vector3 dir)

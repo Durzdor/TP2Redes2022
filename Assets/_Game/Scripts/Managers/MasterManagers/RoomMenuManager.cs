@@ -55,6 +55,10 @@ public class RoomMenuManager : MonoBehaviourPun
             }
         }
     }
+    public void StartGameButton()
+    {
+        photonView.RPC("LoadGameplayLevel", RpcTarget.All);
+    }
     private IEnumerator Countdown(int duration)
     {
         var count = duration;
@@ -78,7 +82,7 @@ public class RoomMenuManager : MonoBehaviourPun
     void UpdateListAddPlayer(Player player, int playerTextSlot)
     {
         playerSlots[playerTextSlot].SetActive(true);
-        TextMeshProUGUI nametext = playerSlots[playerTextSlot].GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI nametext = playerSlots[playerTextSlot].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         nametext.text = player.NickName;
     }
     [PunRPC]
