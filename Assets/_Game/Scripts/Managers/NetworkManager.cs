@@ -63,6 +63,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         GameObject[] clientObjects = GameObject.FindGameObjectsWithTag("Client");
         if (masterClientObjects.Length > 0)
         {
+            PhotonNetwork.LocalPlayer.NickName = "Server";
             foreach (GameObject masterObject in masterClientObjects)
             {
                 switch (masterObject.name)

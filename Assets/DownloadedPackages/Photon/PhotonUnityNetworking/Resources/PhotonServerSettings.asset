@@ -15,8 +15,8 @@ MonoBehaviour:
   AppSettings:
     AppIdRealtime: ba7d5033-a481-44f2-a5f2-ce14e2120ad3
     AppIdFusion: 
-    AppIdChat: 
-    AppIdVoice: 
+    AppIdChat: 91d2c658-9dee-4a75-8a25-3917c862e051
+    AppIdVoice: 377c8396-6e4a-43d4-a8a9-0643eccb2ee8
     AppVersion: 1
     UseNameServer: 1
     FixedRegion: 
@@ -55,6 +55,9 @@ MonoBehaviour:
   - RequestMove
   - RequestShockWave
   - ShockWaveAnimation
+  - CantHearYou
+  - ChangeColour
+  - HeresWhy
   - UpdateGamePlayTimer
   - UpdateScores
   - UpdateTeams
