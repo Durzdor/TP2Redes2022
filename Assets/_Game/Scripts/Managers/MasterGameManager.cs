@@ -124,9 +124,12 @@ public class MasterGameManager : MonoBehaviourPun
         int scene = SceneManager.GetActiveScene().buildIndex;
         if (scene == 1)
         {
-            PlayerList.Remove(player.NickName);
-            UpdatedPlayerList?.Invoke();
-            ReadyToStartGame?.Invoke(PhotonNetwork.PlayerList.Length >= minPlayerToStart);
+            if (PlayerList.ContainsKey(player.NickName))
+            {
+                PlayerList.Remove(player.NickName);
+                UpdatedPlayerList?.Invoke();
+                ReadyToStartGame?.Invoke(PhotonNetwork.PlayerList.Length >= minPlayerToStart);
+            }
         }
         else if (scene == 2)
         {

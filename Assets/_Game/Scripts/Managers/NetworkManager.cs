@@ -158,6 +158,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel(0);
         status.text = "Disconnected: " + cause;
+        Connect();
         if (joinButton)
             joinButton.interactable = true;
         if (createButton)
