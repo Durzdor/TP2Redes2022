@@ -112,6 +112,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             {
                 var currMessage = string.Join(" ", words, 2, words.Length - 2);
                 _chatClient.SendPrivateMessage(target, currMessage);
+                inputField.text = "";
                 return;
             }
 
