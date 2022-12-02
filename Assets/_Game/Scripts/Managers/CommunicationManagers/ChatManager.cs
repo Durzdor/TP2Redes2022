@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Chat;
 using Photon.Pun;
@@ -10,6 +11,23 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] private TMP_InputField inputField;
     private ChatClient _chatClient;
     private const string WhisperCommand = "/w";
+    private const string WhisperCommandLong = "/whisper";
+
+    private const string WhisperCommandDescription =
+        "/w <target> <message> - use this to send a private message to another player";
+
+    private const string MuteCommand = "/m";
+    private const string MuteCommandLong = "/mute";
+
+    private const string MuteCommandDescription =
+        "/m <target> - Use this to mute a player, preventing further messages from being recieved";
+
+    private const string MuteCommandDescriptionAll =
+        "/m all - Use this to mute all players, preventing further messages from being recieved";
+
+    private const string HelpCommand = "/h";
+    private const string HelpCommandLong = "/help";
+    private readonly List<string> _mutedPlayers = new List<string>();
 
     private string _channel;
 
@@ -32,9 +50,17 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message)) return;
         var words = message.Split(' ');
 
-        if (words.Length > 2 && words[0] == WhisperCommand)
+        if (words.Length > 2 && (words[0] == WhisperCommand || words[0] == WhisperCommandLong))
         {
             DoCommandWhisper(words);
+        }
+        else if (words.Length > 1 && (words[0] == MuteCommand || words[0] == MuteCommandLong))
+        {
+            DoCommandMute(words);
+        }
+        else if (words[0] == HelpCommand || words[0] == HelpCommandLong)
+        {
+            DoCommandHelp();
         }
         else
         {
@@ -53,7 +79,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        content.text += "Connected to Chat." + "\n" + "Use /w <target> <msg> to send private messages!" + "\n";
+        content.text += "Connected to Chat." + "\n" + "Use /h to check commands available!" + "\n";
         _channel = PhotonNetwork.CurrentRoom.Name;
         _chatClient.Subscribe(_channel);
     }
@@ -68,11 +94,18 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         for (var i = 0; i < senders.Length; i++)
         {
             var currSenders = senders[i];
+            if (_mutedPlayers.Contains(currSenders)) continue;
             string color;
             if (PhotonNetwork.NickName == currSenders)
+            {
                 color = "<color=blue>";
+                currSenders = "Me";
+            }
             else
+            {
                 color = "<color=red>";
+            }
+
             content.text += color + currSenders + ": " + "</color>" + messages[i] + "\n";
         }
     }
@@ -116,7 +149,54 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 return;
             }
 
-        content.text += "<color=pink>" + "Target not valid." + "</color>" + "\n";
+        content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
         inputField.text = "";
+    }
+
+    private void DoCommandMute(string[] words)
+    {
+        inputField.text = "";
+        var target = words[1];
+        foreach (var currPlayer in PhotonNetwork.PlayerList)
+        {
+            if (currPlayer.NickName == PhotonNetwork.NickName) continue;
+            if (target == currPlayer.NickName)
+            {
+                CheckMute(target);
+                return;
+            }
+
+            if (target != "all") continue;
+            CheckMute(currPlayer.NickName);
+        }
+
+        if (target == "all") return;
+        content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
+        inputField.text = "";
+    }
+
+    private void CheckMute(string target)
+    {
+        if (_mutedPlayers.Contains(target))
+        {
+            _mutedPlayers.Remove(target);
+            content.text += target + " " + "is no longer Muted!" + "\n";
+            return;
+        }
+
+        _mutedPlayers.Add(target);
+        content.text += target + " " + "is now Muted!" + "\n";
+    }
+
+    private void DoCommandHelp()
+    {
+        inputField.text = "";
+        content.text += "Available commands:" + "\n"
+                                              + WhisperCommandDescription +
+                                              "\n"
+                                              + MuteCommandDescription +
+                                              "\n"
+                                              + MuteCommandDescriptionAll +
+                                              "\n";
     }
 }

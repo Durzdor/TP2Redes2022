@@ -55,3 +55,25 @@ Como consigna, además deberá:
 ○ Timer (Seconds: float)
 ○ Character (Position: Vector3, Rotation: Quaternion)
 ○ Projectiles (Velocity: Vector3)
+
+Final
+Fecha de Entrega: 16/12/2022
+El juego deberá ser de al menos 4 jugadores incluyendo:
+●	PunRPC.
+●	Control de animaciones (al menos 3 animaciones).
+●	Photon Network.
+●	MasterManager (Como el que vimos en clase) en la cual corra 6 acciones como mínimo.
+●	Photon Chat (El cual sea funcional al gameplay (Ej: comandos, trucos, etc)):
+○	3 acciones con autoridad local.
+○	3 acciones con autoridad del master.
+●	Photon Voice (Con feedback visual).
+
+Como consigna, además deberá:
+●	El juego debe ser de 4 clientes, sin contar el master. 
+    A su vez, la cantidad de clientes conectados, para comenzar la partida, debe ser editable.
+●	Tener una condición de victoria y derrota, y notificará a todos los usuarios de la misma.
+●	El juego debe ser Hybrid. No podrá haber ningún desfase entre el Master y los demás clientes. 
+●	Sincronizar al menos 10 objetos en escena simultáneamente y constantemente en los cuales 4 deben ser completamente diferentes. Ej:
+○	Timer (Seconds: float)
+○	Character (Position: Vector3, Rotation: Quaternion)
+○	Projectiles (Velocity: Vector3)
