@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -205,7 +206,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        OnPlayerDisconnect?.Invoke(otherPlayer);
+        if (PhotonNetwork.IsMasterClient)
+            OnPlayerDisconnect?.Invoke(otherPlayer);
     }
     bool IsNameUnique()
     {

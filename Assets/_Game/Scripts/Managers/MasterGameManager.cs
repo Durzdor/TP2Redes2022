@@ -165,4 +165,10 @@ public class MasterGameManager : MonoBehaviourPun
             charModel.ShockWave();
         }
     }
+    [PunRPC]
+    void AddPlayerObj(string playerName, string playerObjName)
+    {
+        GameObject playerObj = GameObject.Find(playerObjName);
+        AddPlayerCharacter(playerName, playerObj);
+    }
 }
