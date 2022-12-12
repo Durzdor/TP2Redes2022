@@ -15,10 +15,10 @@ public class Instantiator : MonoBehaviour
     {
         GameObject ballObject = PhotonNetwork.Instantiate("Ball", spawnPoints[0].position, Quaternion.identity);
         MasterGameManager.Instance.SetBallObject(ballObject);
-        for (int i = 1; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
-        {
-            GameObject playerObject = PhotonNetwork.Instantiate("Player" + i.ToString(), spawnPoints[i].position, Quaternion.identity);
-            MasterGameManager.Instance.AddPlayerCharacter(PhotonNetwork.PlayerList[i].NickName, playerObject);
-        }
+        //for (int i = 1; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+        //{
+        //    GameObject playerObject = PhotonNetwork.Instantiate("Player" + i.ToString(), spawnPoints[i].position, Quaternion.identity);
+        //    MasterGameManager.Instance.AddPlayerCharacter(PhotonNetwork.PlayerList[i].NickName, playerObject);
+        //}
     }
 }

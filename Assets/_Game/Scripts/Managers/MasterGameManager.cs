@@ -124,9 +124,12 @@ public class MasterGameManager : MonoBehaviourPun
         int scene = SceneManager.GetActiveScene().buildIndex;
         if (scene == 1)
         {
-            PlayerList.Remove(player.NickName);
-            UpdatedPlayerList?.Invoke();
-            ReadyToStartGame?.Invoke(PhotonNetwork.PlayerList.Length >= minPlayerToStart);
+            if (PlayerList.ContainsKey(player.NickName))
+            {
+                PlayerList.Remove(player.NickName);
+                UpdatedPlayerList?.Invoke();
+                ReadyToStartGame?.Invoke(PhotonNetwork.PlayerList.Length >= minPlayerToStart);
+            }
         }
         else if (scene == 2)
         {
@@ -140,7 +143,9 @@ public class MasterGameManager : MonoBehaviourPun
     [PunRPC]
     void RemovePlayerChar(string playerChar)
     {
-        PhotonNetwork.Destroy(GameObject.Find(playerChar));
+        GameObject charObj = GameObject.Find(playerChar);
+        if (charObj)
+            PhotonNetwork.Destroy(charObj);
     }
     [PunRPC]
     void RequestMove(string client, Vector3 dir)
@@ -159,5 +164,11 @@ public class MasterGameManager : MonoBehaviourPun
             var charModel = PlayerList[client].GetComponent<PlayerModel>();
             charModel.ShockWave();
         }
+    }
+    [PunRPC]
+    void AddPlayerObj(string playerName, string playerObjName)
+    {
+        GameObject playerObj = GameObject.Find(playerObjName);
+        AddPlayerCharacter(playerName, playerObj);
     }
 }
