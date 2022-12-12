@@ -10,23 +10,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] private TextMeshProUGUI content;
     [SerializeField] private TMP_InputField inputField;
     private ChatClient _chatClient;
-    private const string WhisperCommand = "/w";
-    private const string WhisperCommandLong = "/whisper";
-
-    private const string WhisperCommandDescription =
-        "/w <target> <message> - use this to send a private message to another player";
-
-    private const string MuteCommand = "/m";
-    private const string MuteCommandLong = "/mute";
-
-    private const string MuteCommandDescription =
-        "/m <target> - Use this to mute a player, preventing further messages from being recieved";
-
-    private const string MuteCommandDescriptionAll =
-        "/m all - Use this to mute all players, preventing further messages from being recieved";
-
-    private const string HelpCommand = "/h";
-    private const string HelpCommandLong = "/help";
     private readonly List<string> _mutedPlayers = new List<string>();
 
     private string _channel;
@@ -50,17 +33,23 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message)) return;
         var words = message.Split(' ');
 
-        if (words.Length > 2 && (words[0] == WhisperCommand || words[0] == WhisperCommandLong))
+        if (words.Length > 3 && (words[0] == ChatCommands.Team || words[0] == ChatCommands.TeamLong))
+            DoCommandChangeTeam(words);
+        if (words.Length > 2 && (words[0] == ChatCommands.Whisper || words[0] == ChatCommands.WhisperLong))
         {
             DoCommandWhisper(words);
         }
-        else if (words.Length > 1 && (words[0] == MuteCommand || words[0] == MuteCommandLong))
+        else if (words.Length > 1 && (words[0] == ChatCommands.Mute || words[0] == ChatCommands.MuteLong))
         {
             DoCommandMute(words);
         }
-        else if (words[0] == HelpCommand || words[0] == HelpCommandLong)
+        else if (words[0] == ChatCommands.Help || words[0] == ChatCommands.HelpLong)
         {
             DoCommandHelp();
+        }
+        else if (words[0] == ChatCommands.Restart || words[0] == ChatCommands.RestartLong)
+        {
+            DoCommandRestart();
         }
         else
         {
@@ -139,6 +128,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void DoCommandWhisper(string[] words)
     {
+        // /w <player> <msg>
         var target = words[1];
         foreach (var currPlayer in PhotonNetwork.PlayerList)
             if (target == currPlayer.NickName)
@@ -155,6 +145,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void DoCommandMute(string[] words)
     {
+        // /m <player/all>
         inputField.text = "";
         var target = words[1];
         foreach (var currPlayer in PhotonNetwork.PlayerList)
@@ -190,13 +181,25 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void DoCommandHelp()
     {
+        // /h
         inputField.text = "";
         content.text += "Available commands:" + "\n"
-                                              + WhisperCommandDescription +
+                                              + ChatCommands.WhisperDescription +
                                               "\n"
-                                              + MuteCommandDescription +
+                                              + ChatCommands.MuteDescription +
                                               "\n"
-                                              + MuteCommandDescriptionAll +
+                                              + ChatCommands.MuteAllDescription +
                                               "\n";
+    }
+
+    private void DoCommandRestart()
+    {
+        // /r
+        PhotonNetwork.LoadLevel(2);
+    }
+
+    private void DoCommandChangeTeam(string[] words)
+    {
+        // /t red, /t blue
     }
 }
