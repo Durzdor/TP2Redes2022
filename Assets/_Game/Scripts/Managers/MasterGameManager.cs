@@ -15,10 +15,13 @@ public class MasterGameManager : MonoBehaviourPun
     GameObject ballObject;
     public int listCount;
     Dictionary<string, GameObject> PlayerList = new Dictionary<string, GameObject>();
-
+    [SerializeField] GameObject localGm;
     public int minPlayerToStart;
     public event Action<bool> ReadyToStartGame;
     public event Action UpdatedPlayerList;
+
+    [SerializeField] GameObject instantiatorPrefab;
+    private LocalInstantiator instanceManager;
 
     public static MasterGameManager Instance;
     public void MakeSingleton()
@@ -106,6 +109,35 @@ public class MasterGameManager : MonoBehaviourPun
         if (team2Goals > team1Goals)
             winner = 2;
         return (team1Goals, team2Goals, winner);
+    }
+    private void OnLevelWasLoaded(int level)
+    {
+        if (PhotonNetwork.IsMasterClient) return;
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            //Instantiate(localGm, Vector2.zero, Quaternion.identity);
+            Debug.Log("Start on GameplayScene");
+            instanceManager = Instantiate(instantiatorPrefab).GetComponent<LocalInstantiator>();
+            if (instanceManager)
+                SpawnPlayer();
+        }
+    }
+    public void SpawnPlayer()
+    {
+        Debug.Log("Spawning Player");
+        if (photonView.IsMine)
+        {
+            
+        }
+        Debug.Log("Is Mine");
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            if (PhotonNetwork.PlayerList[i].NickName == PhotonNetwork.LocalPlayer.NickName)
+            {
+                Debug.Log("Instantiate");
+                instanceManager.SpawnPlayer(i);
+            }
+        }
     }
     [PunRPC]
     void PlayerConnectedRPC(Player player)

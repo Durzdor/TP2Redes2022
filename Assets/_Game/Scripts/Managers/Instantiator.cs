@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class Instantiator : MonoBehaviour
 {
-    [SerializeField] Transform[] spawnPoints;
+    public Transform[] spawnPoints;
     private void Awake()
     {
         if (!PhotonNetwork.IsMasterClient)

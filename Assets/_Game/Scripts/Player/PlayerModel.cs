@@ -29,8 +29,8 @@ public class PlayerModel : MonoBehaviourPun
             if (hitObject.gameObject.layer == 6)
             {
                 var dir = hitObject.transform.position - transform.position;
-                var objRb = hitObject.GetComponent<Rigidbody2D>();
-                objRb.AddForce(new Vector2(dir.x, dir.y) * impactForce, ForceMode2D.Impulse);
+                var objRb = hitObject.GetComponent<BallModel>();
+                objRb.photonView.RPC("GettingShockWaved", RpcTarget.MasterClient, dir, impactForce);
                 Debug.Log($"Hitted {hitObject.name}");
             }
         }

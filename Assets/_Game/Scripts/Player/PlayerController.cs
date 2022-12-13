@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         charModel = GetComponent<PlayerModel>();
-
+        if (!charModel.photonView.IsMine)
+            Destroy(this);
     }
     void Update()
     {
