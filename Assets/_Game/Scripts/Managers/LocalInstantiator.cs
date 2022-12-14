@@ -9,10 +9,19 @@ public class LocalInstantiator : MonoBehaviour
 
     private void Start()
     {
+        //Transform[] paints = GameObject.Find("Instantiator").GetComponent<Instantiator>().spawnPoints;
+        //for (int i = 0; i < paints.Length; i++)
+        //{
+        //    spawnPoints[i] = paints[i];
+        //}
+        //spawnPoints[1] = GameObject.Find("Player1Spawn").transform;
+        //spawnPoints[2] = GameObject.Find("Player2Spawn").transform;
+        //spawnPoints[3] = GameObject.Find("Player3Spawn").transform;
+        //spawnPoints[4] = GameObject.Find("Player4Spawn").transform;
     }
     public void SpawnPlayer(int player)
     {
-        GameObject playerObject = PhotonNetwork.Instantiate("Player" + player.ToString(), spawnPoints[player].position, Quaternion.identity);
+        GameObject playerObject = PhotonNetwork.Instantiate("Player" + player.ToString(), GameObject.Find("Player" + player.ToString() + "Spawn").transform.position, Quaternion.identity);
         MasterGameManager.Instance.RPCMasterCall("AddPlayerObj", PhotonNetwork.PlayerList[player].NickName, playerObject);
     }
     public void SpawnBall()

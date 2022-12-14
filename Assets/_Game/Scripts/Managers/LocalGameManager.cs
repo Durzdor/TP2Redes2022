@@ -6,6 +6,7 @@ using Photon.Pun;
 
 public class LocalGameManager : MonoBehaviourPun
 {
+    [SerializeField] GameObject instantiatorPrefab;
     private LocalInstantiator instanceManager;
 
     public static LocalGameManager Instance;
@@ -25,10 +26,18 @@ public class LocalGameManager : MonoBehaviourPun
 
     private void Awake()
     {
-        MakeSingleton();
+        //MakeSingleton();
     }
     private void Start()
     {
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            Debug.Log("Start on GameplayScene");
+            instanceManager = Instantiate(instantiatorPrefab).GetComponent<LocalInstantiator>();
+            //instanceManager = GameObject.Find("Instantiator").GetComponent<LocalInstantiator>();
+            if (instanceManager)
+                SpawnPlayer();
+        }
     }
     public void SpawnPlayer()
     {
@@ -46,18 +55,18 @@ public class LocalGameManager : MonoBehaviourPun
             }
         }
     }
-    private void OnLevelWasLoaded(int level)
-    {
-        if (SceneManager.GetActiveScene().buildIndex == 2)
-        {
-            Debug.Log("Start on GameplayScene");
-            instanceManager = GameObject.Find("Instantiator").GetComponent<LocalInstantiator>();
-            SpawnPlayer();
-        }
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            Debug.Log("Start on RoomScene");
-            photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-        }
-    }
+    //private void OnLevelWasLoaded(int level)
+    //{
+    //    if (SceneManager.GetActiveScene().buildIndex == 2)
+    //    {
+    //        Debug.Log("Start on GameplayScene");
+    //        instanceManager = GameObject.Find("Instantiator").GetComponent<LocalInstantiator>();
+    //        SpawnPlayer();
+    //    }
+    //    if (SceneManager.GetActiveScene().buildIndex == 1)
+    //    {
+    //        Debug.Log("Start on RoomScene");
+    //        photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+    //    }
+    //}
 }
