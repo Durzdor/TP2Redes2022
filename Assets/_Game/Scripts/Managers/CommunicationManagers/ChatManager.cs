@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Chat;
@@ -33,9 +34,21 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message)) return;
         var words = message.Split(' ');
 
-        if (words.Length > 3 && (words[0] == ChatCommands.Team || words[0] == ChatCommands.TeamLong))
-            DoCommandChangeTeam(words);
-        if (words.Length > 2 && (words[0] == ChatCommands.Whisper || words[0] == ChatCommands.WhisperLong))
+        if (words.Length == 3 && (words[0] == ChatCommands.MoveSpeed || words[0] == ChatCommands.MoveSpeedLong))
+        {
+            DoCommandMoveSpeed(words);
+        }
+        else if (words.Length == 3 &&
+                 (words[0] == ChatCommands.ImpactForce || words[0] == ChatCommands.ImpactForceLong))
+        {
+            DoCommandImpactForce(words);
+        }
+        else if (words.Length == 3 &&
+                 (words[0] == ChatCommands.GoalModify || words[0] == ChatCommands.GoalModifyLong))
+        {
+            DoCommandGoalModify(words);
+        }
+        else if (words.Length > 2 && (words[0] == ChatCommands.Whisper || words[0] == ChatCommands.WhisperLong))
         {
             DoCommandWhisper(words);
         }
@@ -47,9 +60,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         {
             DoCommandHelp();
         }
-        else if (words[0] == ChatCommands.Restart || words[0] == ChatCommands.RestartLong)
+        else if (words[0] == ChatCommands.Players || words[0] == ChatCommands.PlayersLong)
         {
-            DoCommandRestart();
+            DoCommandConnectedPlayers();
         }
         else
         {
@@ -188,18 +201,102 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                                               "\n"
                                               + ChatCommands.MuteDescription +
                                               "\n"
-                                              + ChatCommands.MuteAllDescription +
+                                              + ChatCommands.PlayersDescription +
+                                              "\n"
+                                              + ChatCommands.MoveSpeedDescription +
+                                              "\n"
+                                              + ChatCommands.ImpactForceDescription +
+                                              "\n"
+                                              + ChatCommands.GoalModifyDescription +
                                               "\n";
     }
 
-    private void DoCommandRestart()
+    private void DoCommandMoveSpeed(string[] words)
     {
-        // /r
-        PhotonNetwork.LoadLevel(2);
+        var target = words[1];
+        if (float.TryParse(words[2], out var newSpeedInput))
+        {
+            for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                if (target != PhotonNetwork.PlayerList[i].NickName) continue;
+                var objName = $"Player{i}(Clone)";
+                var obj = GameObject.Find(objName);
+                var objModel = obj.GetComponent<PlayerModel>();
+                objModel.ChangeSpeed(newSpeedInput);
+                content.text += $"<color=orange> Speed set to {newSpeedInput}. </color> \n";
+                inputField.text = "";
+                return;
+            }
+
+            content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
+        else
+        {
+            content.text += "<color=orange>" + "Value not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
     }
 
-    private void DoCommandChangeTeam(string[] words)
+    private void DoCommandImpactForce(string[] words)
     {
-        // /t red, /t blue
+        var target = words[1];
+        if (float.TryParse(words[2], out var newImpactForceInput))
+        {
+            for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                if (target != PhotonNetwork.PlayerList[i].NickName) continue;
+                var objName = $"Player{i}(Clone)";
+                var obj = GameObject.Find(objName);
+                var objModel = obj.GetComponent<PlayerModel>();
+                objModel.ChangeImpact(newImpactForceInput);
+                content.text += $"<color=orange> ImpactForce set to {newImpactForceInput}. </color> \n";
+                inputField.text = "";
+                return;
+            }
+
+            content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
+        else
+        {
+            content.text += "<color=orange>" + "Value not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
+    }
+
+    private void DoCommandConnectedPlayers()
+    {
+        content.text += $"Connected Players: \n";
+        for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            var playerNickname = PhotonNetwork.PlayerList[i].NickName;
+            content.text += $"{i}) {playerNickname} \n";
+        }
+
+        inputField.text = "";
+    }
+
+    private void DoCommandGoalModify(string[] words)
+    {
+        if (Enum.TryParse(words[1], out Goals.TeamGoal teamEnum))
+        {
+            if (int.TryParse(words[2], out var extraGoals))
+            {
+                MasterGameManager.Instance.ChangeTeamScore(extraGoals, teamEnum);
+                content.text += $"{teamEnum} got {extraGoals} extra goals. \n";
+                inputField.text = "";
+            }
+            else
+            {
+                content.text += "<color=orange>" + "Goals not valid." + "</color>" + "\n";
+                inputField.text = "";
+            }
+        }
+        else
+        {
+            content.text += "<color=orange>" + "Team not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
     }
 }

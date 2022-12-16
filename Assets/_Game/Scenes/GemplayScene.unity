@@ -582,8 +582,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2147,7 +2147,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 51585022}
   m_HandleRect: {fileID: 51585021}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5697,7 +5697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8bea669af76bf54dbf9ee2ad99e00e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
+  team: 2
 --- !u!1 &2087421973
 GameObject:
   m_ObjectHideFlags: 0

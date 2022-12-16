@@ -7,27 +7,42 @@ public class ChatCommands : MonoBehaviour
     public const string WhisperLong = "/whisper";
 
     public const string WhisperDescription =
-        "/w <target> <message> - use this to send a private message to another player";
+        "/w or /whisper <target> <message> - use this to send a private message to another player";
 
     // Mute /m
     public const string Mute = "/m";
     public const string MuteLong = "/mute";
 
     public const string MuteDescription =
-        "/m <target> - Use this to mute a player, preventing further messages from being recieved";
-
-    public const string MuteAllDescription =
-        "/m all - Use this to mute all players, preventing further messages from being recieved";
+        "/m or /mute <target> or all - Use this to mute players, preventing further messages from being recieved";
 
     // Help /h
     public const string Help = "/h";
     public const string HelpLong = "/help";
 
-    // Restart /r
-    public const string Restart = "/r";
-    public const string RestartLong = "/restart";
+    // Speed /speed
+    public const string MoveSpeed = "/speed";
+    public const string MoveSpeedLong = "/movespeed";
 
-    // Change Team /t
-    public const string Team = "/t";
-    public const string TeamLong = "/team";
+    public const string MoveSpeedDescription =
+        "/speed or /movespeed <target> <value> - Use this to change the player movement speed to the new value";
+
+    // Players connected /p
+    public const string Players = "/p";
+    public const string PlayersLong = "/players";
+    public const string PlayersDescription = "/p or /players - Use this to display all connected players";
+
+    // Impact force /force
+    public const string ImpactForce = "/impact";
+    public const string ImpactForceLong = "/impactforce";
+
+    public const string ImpactForceDescription =
+        "/impact or /impactforce <target> <value> - Use this to change the player impact force to the new value";
+
+    //  Goals /goal
+    public const string GoalModify = "/g";
+    public const string GoalModifyLong = "/goal";
+
+    public const string GoalModifyDescription =
+        "/g or /goal <targetteam> <value> - Use this to add value goals to target team";
 }
