@@ -47,8 +47,6 @@ public class MasterGameManager : MonoBehaviourPun
     {
         NetworkManager.Instance.OnPlayerConnect += PlayerConnected;
         NetworkManager.Instance.OnPlayerDisconnect += PlayerDisconnected;
-        if (!PhotonNetwork.LocalPlayer.IsMasterClient)
-            return;
     }
 
     private void Update()
@@ -96,9 +94,11 @@ public class MasterGameManager : MonoBehaviourPun
         {
             case Goals.TeamGoal.Team1:
                 team1Goals += score;
+                team1Goals = Math.Max(0, team1Goals);
                 break;
             case Goals.TeamGoal.Team2:
                 team2Goals += score;
+                team2Goals = Math.Max(0, team2Goals);
                 break;
             default:
                 break;
@@ -243,5 +243,14 @@ public class MasterGameManager : MonoBehaviourPun
         if (!gameplayUIManager)
             gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GameplayUIManager>();
         gameplayUIManager.ChangeCountdownTimer(newCountdownTimer);
+    }
+
+    [PunRPC]
+    public void SplatActivation()
+    {
+        var obj = GameObject.Find("Splat(Clone)");
+        var child = obj.transform.GetChild(0).gameObject;
+        var newState = !child.activeInHierarchy;
+        child.SetActive(newState);
     }
 }

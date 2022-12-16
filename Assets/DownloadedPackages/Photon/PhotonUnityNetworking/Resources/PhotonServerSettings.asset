@@ -67,6 +67,8 @@ MonoBehaviour:
   - ChangeCountdownTimer
   - ChangeTeamScore
   - ReplicateColor
+  - SplatShow
+  - SplatActivation
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

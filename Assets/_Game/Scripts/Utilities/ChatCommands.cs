@@ -66,4 +66,11 @@ public class ChatCommands : MonoBehaviour
 
     public const string PlayerColorDescription =
         "/c or /color <target> <color> - Use this to change the <target> color to \n (black blue grey green magenta cyan red white yellow) <color>";
+
+    // Splat /s
+    public const string SplatCamera = "/s";
+    public const string SplatCameraLong = "/splat";
+
+    public const string SplatCameraDescription =
+        "/s or /splat <target> or all - Use this to obstruct or clear <target> vision";
 }

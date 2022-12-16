@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ChatManager : MonoBehaviour, IChatClientListener
+public class ChatManager : MonoBehaviourPun, IChatClientListener
 {
     [SerializeField] private TextMeshProUGUI content;
     [SerializeField] private TMP_InputField inputField;
@@ -37,7 +37,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         if (SceneManager.GetActiveScene().buildIndex != 2) return;
 
-        //Gameplay commands
         if (words.Length == 3 && (words[0] == ChatCommands.MoveSpeed || words[0] == ChatCommands.MoveSpeedLong))
         {
             DoCommandMoveSpeed(words);
@@ -62,7 +61,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         {
             DoCommandTimerModify(words);
         }
-        // Local commands?
         else if (words.Length > 2 && (words[0] == ChatCommands.Whisper || words[0] == ChatCommands.WhisperLong))
         {
             DoCommandWhisper(words);
@@ -70,6 +68,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         else if (words.Length == 2 && (words[0] == ChatCommands.Mute || words[0] == ChatCommands.MuteLong))
         {
             DoCommandMute(words);
+        }
+        else if (words.Length == 2 &&
+                 (words[0] == ChatCommands.SplatCamera || words[0] == ChatCommands.SplatCameraLong))
+        {
+            DoCommandSplatScreen(words);
         }
         else if (words.Length == 2 &&
                  (words[0] == ChatCommands.BackgroundColor || words[0] == ChatCommands.BackgroundColorLong))
@@ -162,18 +165,17 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private void DoCommandWhisper(string[] words)
     {
         // /w <player> <msg>
+        inputField.text = "";
         var target = words[1];
         foreach (var currPlayer in PhotonNetwork.PlayerList)
             if (target == currPlayer.NickName)
             {
                 var currMessage = string.Join(" ", words, 2, words.Length - 2);
                 _chatClient.SendPrivateMessage(target, currMessage);
-                inputField.text = "";
                 return;
             }
 
         content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
-        inputField.text = "";
     }
 
     private void DoCommandMute(string[] words)
@@ -196,7 +198,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         if (target == "all") return;
         content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
-        inputField.text = "";
     }
 
     private void CheckMute(string target)
@@ -234,12 +235,15 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                                               + ChatCommands.BackgroundColorDescription +
                                               "\n"
                                               + ChatCommands.PlayerColorDescription +
+                                              "\n"
+                                              + ChatCommands.SplatCameraDescription +
                                               "\n";
     }
 
     private void DoCommandMoveSpeed(string[] words)
     {
         // /speed
+        inputField.text = "";
         var target = words[1];
         if (float.TryParse(words[2], out var newSpeedInput))
         {
@@ -252,23 +256,21 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 var objModel = obj.GetComponent<PlayerModel>();
                 objModel.ChangeSpeed(newSpeedInput);
                 content.text += $"<color=orange> Speed set to {newSpeedInput}. </color> \n";
-                inputField.text = "";
                 return;
             }
 
             content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
         else
         {
             content.text += "<color=orange>" + "Value not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
     }
 
     private void DoCommandImpactForce(string[] words)
     {
         // /impact
+        inputField.text = "";
         var target = words[1];
         if (float.TryParse(words[2], out var newImpactForceInput))
         {
@@ -281,36 +283,33 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 var objModel = obj.GetComponent<PlayerModel>();
                 objModel.ChangeImpact(newImpactForceInput);
                 content.text += $"<color=orange> ImpactForce set to {newImpactForceInput}. </color> \n";
-                inputField.text = "";
                 return;
             }
 
             content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
         else
         {
             content.text += "<color=orange>" + "Value not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
     }
 
     private void DoCommandConnectedPlayers()
     {
         // /players
+        inputField.text = "";
         content.text += $"Connected Players: \n";
         for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
         {
             var playerNickname = PhotonNetwork.PlayerList[i].NickName;
             content.text += $"{i})<color=orange>{playerNickname}</color> \n";
         }
-
-        inputField.text = "";
     }
 
     private void DoCommandGoalModify(string[] words)
     {
         // /goal
+        inputField.text = "";
         if (Enum.TryParse(words[1], out Goals.TeamGoal teamEnum))
         {
             if (int.TryParse(words[2], out var extraGoals))
@@ -318,35 +317,31 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 MasterGameManager.Instance.RPCMasterCall("ChangeTeamScore", extraGoals, teamEnum);
                 //MasterGameManager.Instance.ChangeTeamScore(extraGoals, teamEnum);
                 content.text += $"<color=orange> {teamEnum} got {extraGoals} extra goals. </color> \n";
-                inputField.text = "";
             }
             else
             {
                 content.text += "<color=orange>" + "Goals not valid." + "</color>" + "\n";
-                inputField.text = "";
             }
         }
         else
         {
             content.text += "<color=orange>" + "Team not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
     }
 
     private void DoCommandTimerModify(string[] words)
     {
         // /t
+        inputField.text = "";
         if (int.TryParse(words[1], out var newTimer))
         {
             MasterGameManager.Instance.RPCMasterCall("ChangeCountdownTimer", newTimer);
             //MasterGameManager.Instance.ChangeCountdownTimer(newTimer);
             content.text += $"<color=orange> Timer set to {newTimer} seconds remaining. </color> \n";
-            inputField.text = "";
         }
         else
         {
             content.text += "<color=orange>" + "Time not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
     }
 
@@ -354,16 +349,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         // /bg
         // black blue grey green magenta cyan red white yellow
+        inputField.text = "";
         var newColor = StringToColor(words[1]);
         if (newColor == Color.clear)
-        {
             content.text += "<color=orange>" + "Color not valid." + "</color>" + "\n";
-            inputField.text = "";
-        }
         else
-        {
             CameraBackgroundChange(newColor);
-        }
     }
 
     private Color StringToColor(string inputColor)
@@ -406,18 +397,17 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         foreach (var cam in Camera.allCameras) cam.backgroundColor = color;
         content.text += $"<color=orange> Background color set to {color}. </color> \n";
-        inputField.text = "";
     }
 
     private void DoCommandPlayerColorModify(string[] words)
     {
         // /c
+        inputField.text = "";
         var target = words[1];
         var newColor = StringToColor(words[2]);
         if (newColor == Color.clear)
         {
             content.text += "<color=orange>" + "Color not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
         else
         {
@@ -431,12 +421,33 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 var hexColor = ColorUtility.ToHtmlStringRGBA(newColor);
                 objModel.ChangeColor(hexColor);
                 content.text += $"<color=orange> Player color set to {newColor}. </color> \n";
-                inputField.text = "";
                 return;
             }
 
             content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
-            inputField.text = "";
         }
+    }
+
+    private void DoCommandSplatScreen(string[] words)
+    {
+        // Splat /s
+        inputField.text = "";
+        var target = words[1];
+        foreach (var currPlayer in PhotonNetwork.PlayerList)
+        {
+            if (target == "all")
+            {
+                MasterGameManager.Instance.photonView.RPC("SplatActivation", RpcTarget.Others);
+                break;
+            }
+
+            //if (currPlayer.NickName == PhotonNetwork.NickName) continue;
+            if (target != currPlayer.NickName) continue;
+            MasterGameManager.Instance.photonView.RPC("SplatActivation", currPlayer);
+            return;
+        }
+
+        if (target == "all") return;
+        content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
     }
 }

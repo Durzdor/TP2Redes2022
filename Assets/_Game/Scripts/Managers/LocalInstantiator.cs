@@ -34,9 +34,10 @@ public class LocalInstantiator : MonoBehaviour
         MasterGameManager.Instance.SetBallObject(ballObject);
     }
 
-    public void CustomSpawn(string prefabname, Vector3 spawnPosition, Vector3 rotation)
+    public GameObject CustomSpawn(string prefabname, Vector3 spawnPosition, Vector3 rotation)
     {
-        PhotonNetwork.Instantiate(prefabname, spawnPosition,
+        var obj = PhotonNetwork.Instantiate(prefabname, spawnPosition,
             rotation == Vector3.zero ? Quaternion.identity : Quaternion.Euler(rotation));
+        return obj;
     }
 }
