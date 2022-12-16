@@ -11,7 +11,7 @@ public class MasterGameManager : MonoBehaviourPun
 {
     private int team1Goals = 0;
     private int team2Goals = 0;
-    private GemplayUIManager gameplayUIManager;
+    private GameplayUIManager gameplayUIManager;
     private GameObject ballObject;
     public int listCount;
     private Dictionary<string, GameObject> PlayerList = new Dictionary<string, GameObject>();
@@ -104,7 +104,7 @@ public class MasterGameManager : MonoBehaviourPun
         }
 
         if (!gameplayUIManager)
-            gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GemplayUIManager>();
+            gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GameplayUIManager>();
         gameplayUIManager.photonView.RPC("UpdateScores", RpcTarget.All, team1Goals, team2Goals);
     }
 
@@ -184,7 +184,7 @@ public class MasterGameManager : MonoBehaviourPun
             photonView.RPC("RemovePlayerChar", RpcTarget.MasterClient, PlayerList[player.NickName].gameObject.name);
             PlayerList.Remove(player.NickName);
             if (!gameplayUIManager)
-                gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GemplayUIManager>();
+                gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GameplayUIManager>();
             gameplayUIManager.UpdateTeamsNames();
         }
     }
@@ -234,5 +234,13 @@ public class MasterGameManager : MonoBehaviourPun
     public GameObject getPlayerObjFromNickname(string nickname)
     {
         return PlayerList[nickname];
+    }
+
+    [PunRPC]
+    public void ChangeCountdownTimer(int newCountdownTimer)
+    {
+        if (!gameplayUIManager)
+            gameplayUIManager = GameObject.Find("GameplayUIManagerCanvas").GetComponent<GameplayUIManager>();
+        gameplayUIManager.ChangeCountdownTimer(newCountdownTimer);
     }
 }

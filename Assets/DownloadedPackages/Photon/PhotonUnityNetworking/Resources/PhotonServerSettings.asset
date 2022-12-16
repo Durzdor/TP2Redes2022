@@ -64,6 +64,7 @@ MonoBehaviour:
   - UpdateWinner
   - AddPlayerObj
   - GettingShockWaved
+  - ChangeCountdownTimer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -52,9 +52,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         {
             DoCommandWhisper(words);
         }
-        else if (words.Length > 1 && (words[0] == ChatCommands.Mute || words[0] == ChatCommands.MuteLong))
+        else if (words.Length == 2 && (words[0] == ChatCommands.Mute || words[0] == ChatCommands.MuteLong))
         {
             DoCommandMute(words);
+        }
+        else if (words.Length == 2 &&
+                 (words[0] == ChatCommands.TimerModify || words[0] == ChatCommands.TimerModifyLong))
+        {
+            DoCommandTimerModify(words);
         }
         else if (words[0] == ChatCommands.Help || words[0] == ChatCommands.HelpLong)
         {
@@ -208,11 +213,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                                               + ChatCommands.ImpactForceDescription +
                                               "\n"
                                               + ChatCommands.GoalModifyDescription +
+                                              "\n"
+                                              + ChatCommands.TimerModifyDescription +
                                               "\n";
     }
 
     private void DoCommandMoveSpeed(string[] words)
     {
+        // /speed
         var target = words[1];
         if (float.TryParse(words[2], out var newSpeedInput))
         {
@@ -240,6 +248,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void DoCommandImpactForce(string[] words)
     {
+        // /impact
         var target = words[1];
         if (float.TryParse(words[2], out var newImpactForceInput))
         {
@@ -267,6 +276,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void DoCommandConnectedPlayers()
     {
+        // /players
         content.text += $"Connected Players: \n";
         for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
         {
@@ -279,6 +289,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private void DoCommandGoalModify(string[] words)
     {
+        // /goal
         if (Enum.TryParse(words[1], out Goals.TeamGoal teamEnum))
         {
             if (int.TryParse(words[2], out var extraGoals))
@@ -296,6 +307,23 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         else
         {
             content.text += "<color=orange>" + "Team not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
+    }
+
+    private void DoCommandTimerModify(string[] words)
+    {
+        // /t
+        if (int.TryParse(words[1], out var newTimer))
+        {
+            MasterGameManager.Instance.RPCMasterCall("ChangeCountdownTimer", newTimer);
+            //MasterGameManager.Instance.ChangeCountdownTimer(newTimer);
+            content.text += $"<color=orange> Timer set to {newTimer} seconds remaining. </color> \n";
+            inputField.text = "";
+        }
+        else
+        {
+            content.text += "<color=orange>" + "Time not valid." + "</color>" + "\n";
             inputField.text = "";
         }
     }

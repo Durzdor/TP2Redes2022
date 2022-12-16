@@ -4,26 +4,29 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
-public class GemplayUIManager : MonoBehaviourPun
+public class GameplayUIManager : MonoBehaviourPun
 {
-    [SerializeField] TextMeshProUGUI timerText;
-    [SerializeField] TextMeshProUGUI team1Score;
-    [SerializeField] TextMeshProUGUI team2Score;
-    [SerializeField] TextMeshProUGUI team1Players;
-    [SerializeField] TextMeshProUGUI team2Players;
-    [SerializeField] int gamePlayTimer;
-    List<string> playerNames;
+    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI team1Score;
+    [SerializeField] private TextMeshProUGUI team2Score;
+    [SerializeField] private TextMeshProUGUI team1Players;
+    [SerializeField] private TextMeshProUGUI team2Players;
+    [SerializeField] private int gamePlayTimer;
+    private List<string> playerNames;
+    private Coroutine countdownRoutine;
 
     private void Start()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(Countdown(gamePlayTimer));
+            photonView.RPC("UpdateGamePlayTimer", RpcTarget.All, gamePlayTimer);
+            countdownRoutine = StartCoroutine(Countdown(gamePlayTimer));
             photonView.RPC("UpdateScores", RpcTarget.All, 0, 0);
 
             UpdateTeamsNames();
         }
     }
+
     private IEnumerator Countdown(int duration)
     {
         var count = duration;
@@ -36,44 +39,50 @@ public class GemplayUIManager : MonoBehaviourPun
 
         photonView.RPC("LoadGameplayLevel", RpcTarget.All);
     }
+
     public void UpdateTeamsNames()
     {
-        string team1text = "";
-        string team2text = "";
+        var team1text = "";
+        var team2text = "";
         playerNames = MasterGameManager.Instance.getPlayersName();
-        for (int i = 0; i < playerNames.Count; i++)
-        {
+        for (var i = 0; i < playerNames.Count; i++)
             if (i == 0 || i == 2)
-            {
                 team1text += (i + 1).ToString() + " - " + playerNames[i] + "\n";
-            }
             else
-            {
                 team2text += (i + 1).ToString() + " - " + playerNames[i] + "\n";
-            }
-        }
         photonView.RPC("UpdateTeams", RpcTarget.All, team1text, team2text);
     }
+
     [PunRPC]
-    void UpdateGamePlayTimer(int count)
+    private void UpdateGamePlayTimer(int count)
     {
         timerText.text = $"{count}";
     }
+
     [PunRPC]
-    void UpdateScores(int team1Score, int team2Score)
+    private void UpdateScores(int team1Score, int team2Score)
     {
         this.team1Score.text = team1Score.ToString();
         this.team2Score.text = team2Score.ToString();
     }
+
     [PunRPC]
-    void UpdateTeams(string team1, string team2)
+    private void UpdateTeams(string team1, string team2)
     {
         team1Players.text = team1;
         team2Players.text = team2;
     }
+
     [PunRPC]
-    void LoadGameplayLevel()
+    private void LoadGameplayLevel()
     {
         PhotonNetwork.LoadLevel(3);
+    }
+
+    public void ChangeCountdownTimer(int newCountdownValue)
+    {
+        StopCoroutine(countdownRoutine);
+        countdownRoutine = StartCoroutine(Countdown(newCountdownValue));
+        photonView.RPC("UpdateGamePlayTimer", RpcTarget.All, newCountdownValue);
     }
 }
