@@ -25,7 +25,7 @@ public class ChatCommands : MonoBehaviour
     public const string MoveSpeedLong = "/movespeed";
 
     public const string MoveSpeedDescription =
-        "/speed or /movespeed <target> <value> - Use this to change the <target> movement speed to the new <value>";
+        "/speed or /movespeed <target> <value> - Use this to change the <target> movement speed to the new <value>.";
 
     // Players connected /p
     public const string Players = "/p";

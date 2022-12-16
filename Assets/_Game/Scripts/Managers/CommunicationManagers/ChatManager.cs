@@ -34,30 +34,29 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
         var message = inputField.text;
         if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message)) return;
         var words = message.Split(' ');
-
-        if (SceneManager.GetActiveScene().buildIndex != 2) return;
-
-        if (words.Length == 3 && (words[0] == ChatCommands.MoveSpeed || words[0] == ChatCommands.MoveSpeedLong))
+        var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        
+        if (sceneIndex == 2 && words.Length == 3 && (words[0] == ChatCommands.MoveSpeed || words[0] == ChatCommands.MoveSpeedLong))
         {
             DoCommandMoveSpeed(words);
         }
-        else if (words.Length == 3 &&
-                 (words[0] == ChatCommands.ImpactForce || words[0] == ChatCommands.ImpactForceLong))
+        else if (sceneIndex == 2 && words.Length == 3 &&
+                    (words[0] == ChatCommands.ImpactForce || words[0] == ChatCommands.ImpactForceLong))
         {
             DoCommandImpactForce(words);
         }
-        else if (words.Length == 3 &&
-                 (words[0] == ChatCommands.GoalModify || words[0] == ChatCommands.GoalModifyLong))
+        else if (sceneIndex == 2 && words.Length == 3 &&
+                    (words[0] == ChatCommands.GoalModify || words[0] == ChatCommands.GoalModifyLong))
         {
             DoCommandGoalModify(words);
         }
-        else if (words.Length == 3 &&
-                 (words[0] == ChatCommands.PlayerColor || words[0] == ChatCommands.PlayerColorLong))
+        else if (sceneIndex == 2 && words.Length == 3 &&
+                    (words[0] == ChatCommands.PlayerColor || words[0] == ChatCommands.PlayerColorLong))
         {
             DoCommandPlayerColorModify(words);
         }
-        else if (words.Length == 2 &&
-                 (words[0] == ChatCommands.TimerModify || words[0] == ChatCommands.TimerModifyLong))
+        else if (sceneIndex == 2 && words.Length == 2 &&
+                    (words[0] == ChatCommands.TimerModify || words[0] == ChatCommands.TimerModifyLong))
         {
             DoCommandTimerModify(words);
         }
@@ -69,13 +68,13 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
         {
             DoCommandMute(words);
         }
-        else if (words.Length == 2 &&
-                 (words[0] == ChatCommands.SplatCamera || words[0] == ChatCommands.SplatCameraLong))
+        else if (sceneIndex == 2 && words.Length == 2 &&
+                    (words[0] == ChatCommands.SplatCamera || words[0] == ChatCommands.SplatCameraLong))
         {
             DoCommandSplatScreen(words);
         }
         else if (words.Length == 2 &&
-                 (words[0] == ChatCommands.BackgroundColor || words[0] == ChatCommands.BackgroundColorLong))
+                    (words[0] == ChatCommands.BackgroundColor || words[0] == ChatCommands.BackgroundColorLong))
         {
             DoCommandBackgroundColorModify(words);
         }
@@ -215,6 +214,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandHelp()
     {
+        var sceneIndex = SceneManager.GetActiveScene().buildIndex;
         // /h Local
         inputField.text = "";
         content.text += "Available commands:" + "\n"
@@ -222,21 +222,21 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
                                               "\n"
                                               + ChatCommands.MuteDescription +
                                               "\n"
-                                              + ChatCommands.PlayersDescription +
+                                              + ChatCommands.PlayersDescription + (sceneIndex == 2 ?
                                               "\n"
-                                              + ChatCommands.MoveSpeedDescription +
+                                              + ChatCommands.MoveSpeedDescription : "") + (sceneIndex == 2 ?
                                               "\n"
-                                              + ChatCommands.ImpactForceDescription +
+                                              + ChatCommands.ImpactForceDescription : "") + (sceneIndex == 2 ?
                                               "\n"
-                                              + ChatCommands.GoalModifyDescription +
+                                              + ChatCommands.GoalModifyDescription : "") + (sceneIndex == 2 ?
                                               "\n"
-                                              + ChatCommands.TimerModifyDescription +
+                                              + ChatCommands.TimerModifyDescription : "") + 
                                               "\n"
-                                              + ChatCommands.BackgroundColorDescription +
+                                              + ChatCommands.BackgroundColorDescription + (sceneIndex == 2 ?
                                               "\n"
-                                              + ChatCommands.PlayerColorDescription +
+                                              + ChatCommands.PlayerColorDescription : "") + (sceneIndex == 2 ?
                                               "\n"
-                                              + ChatCommands.SplatCameraDescription +
+                                              + ChatCommands.SplatCameraDescription : "") +
                                               "\n";
     }
 
