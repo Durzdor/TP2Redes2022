@@ -164,7 +164,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandWhisper(string[] words)
     {
-        // /w <player> <msg>
+        // /w Local
         inputField.text = "";
         var target = words[1];
         foreach (var currPlayer in PhotonNetwork.PlayerList)
@@ -180,7 +180,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandMute(string[] words)
     {
-        // /m <player/all>
+        // /m Local
         inputField.text = "";
         var target = words[1];
         foreach (var currPlayer in PhotonNetwork.PlayerList)
@@ -215,7 +215,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandHelp()
     {
-        // /h
+        // /h Local
         inputField.text = "";
         content.text += "Available commands:" + "\n"
                                               + ChatCommands.WhisperDescription +
@@ -242,7 +242,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandMoveSpeed(string[] words)
     {
-        // /speed
+        // /speed Local
         inputField.text = "";
         var target = words[1];
         if (float.TryParse(words[2], out var newSpeedInput))
@@ -269,7 +269,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandImpactForce(string[] words)
     {
-        // /impact
+        // /impact Local
         inputField.text = "";
         var target = words[1];
         if (float.TryParse(words[2], out var newImpactForceInput))
@@ -296,7 +296,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandConnectedPlayers()
     {
-        // /players
+        // /players Local
         inputField.text = "";
         content.text += $"Connected Players: \n";
         for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
@@ -308,7 +308,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandGoalModify(string[] words)
     {
-        // /goal
+        // /goal Master
         inputField.text = "";
         if (Enum.TryParse(words[1], out Goals.TeamGoal teamEnum))
         {
@@ -331,7 +331,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandTimerModify(string[] words)
     {
-        // /t
+        // /t Master
         inputField.text = "";
         if (int.TryParse(words[1], out var newTimer))
         {
@@ -347,7 +347,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandBackgroundColorModify(string[] words)
     {
-        // /bg
+        // /bg Local ?
         // black blue grey green magenta cyan red white yellow
         inputField.text = "";
         var newColor = StringToColor(words[1]);
@@ -401,7 +401,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandPlayerColorModify(string[] words)
     {
-        // /c
+        // /c Local????????
         inputField.text = "";
         var target = words[1];
         var newColor = StringToColor(words[2]);
@@ -430,7 +430,7 @@ public class ChatManager : MonoBehaviourPun, IChatClientListener
 
     private void DoCommandSplatScreen(string[] words)
     {
-        // Splat /s
+        // Splat /s Master ?
         inputField.text = "";
         var target = words[1];
         foreach (var currPlayer in PhotonNetwork.PlayerList)
