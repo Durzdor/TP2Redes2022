@@ -9,11 +9,13 @@ public class PlayerModel : MonoBehaviourPun
     [SerializeField] private float impactForce;
     private Rigidbody2D rb;
     private Animation anim;
+    private RendererSearch spriteRend;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animation>();
+        spriteRend = GetComponentInChildren<RendererSearch>();
     }
 
     public void Move(Vector3 dir)
@@ -59,5 +61,19 @@ public class PlayerModel : MonoBehaviourPun
     public void ChangeImpact(float newImpact)
     {
         impactForce = newImpact;
+    }
+
+    public void ChangeColor(string renderColor)
+    {
+        photonView.RPC("ReplicateColor", RpcTarget.All, renderColor);
+    }
+
+    [PunRPC]
+    private void ReplicateColor(string renderColor)
+    {
+        var hexCode = $"#{renderColor}";
+        if (!ColorUtility.TryParseHtmlString(hexCode, out var realColor)) return;
+        var rend = spriteRend.GetComponent<SpriteRenderer>();
+        rend.color = realColor;
     }
 }

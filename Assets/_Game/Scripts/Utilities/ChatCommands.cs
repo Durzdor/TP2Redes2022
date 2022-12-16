@@ -58,5 +58,12 @@ public class ChatCommands : MonoBehaviour
     public const string BackgroundColorLong = "/background";
 
     public const string BackgroundColorDescription =
-        "/bg or /background <color> - Use this to change the background color to \n black blue grey green magenta cyan red white yellow <color>";
+        "/bg or /background <color> - Use this to change the background color to \n (black blue grey green magenta cyan red white yellow) <color>";
+
+    // Player color /c
+    public const string PlayerColor = "/c";
+    public const string PlayerColorLong = "/color";
+
+    public const string PlayerColorDescription =
+        "/c or /color <target> <color> - Use this to change the <target> color to \n (black blue grey green magenta cyan red white yellow) <color>";
 }

@@ -52,6 +52,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         {
             DoCommandGoalModify(words);
         }
+        else if (words.Length == 3 &&
+                 (words[0] == ChatCommands.PlayerColor || words[0] == ChatCommands.PlayerColorLong))
+        {
+            DoCommandPlayerColorModify(words);
+        }
         else if (words.Length == 2 &&
                  (words[0] == ChatCommands.TimerModify || words[0] == ChatCommands.TimerModifyLong))
         {
@@ -227,6 +232,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                                               + ChatCommands.TimerModifyDescription +
                                               "\n"
                                               + ChatCommands.BackgroundColorDescription +
+                                              "\n"
+                                              + ChatCommands.PlayerColorDescription +
                                               "\n";
     }
 
@@ -241,6 +248,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 if (target != PhotonNetwork.PlayerList[i].NickName) continue;
                 var objName = $"Player{i}(Clone)";
                 var obj = GameObject.Find(objName);
+                if (!obj.GetPhotonView().IsMine) break;
                 var objModel = obj.GetComponent<PlayerModel>();
                 objModel.ChangeSpeed(newSpeedInput);
                 content.text += $"<color=orange> Speed set to {newSpeedInput}. </color> \n";
@@ -269,6 +277,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 if (target != PhotonNetwork.PlayerList[i].NickName) continue;
                 var objName = $"Player{i}(Clone)";
                 var obj = GameObject.Find(objName);
+                if (!obj.GetPhotonView().IsMine) break;
                 var objModel = obj.GetComponent<PlayerModel>();
                 objModel.ChangeImpact(newImpactForceInput);
                 content.text += $"<color=orange> ImpactForce set to {newImpactForceInput}. </color> \n";
@@ -345,48 +354,51 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         // /bg
         // black blue grey green magenta cyan red white yellow
-        switch (words[1])
+        var newColor = StringToColor(words[1]);
+        if (newColor == Color.clear)
+        {
+            content.text += "<color=orange>" + "Color not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
+        else
+        {
+            CameraBackgroundChange(newColor);
+        }
+    }
+
+    private Color StringToColor(string inputColor)
+    {
+        switch (inputColor)
         {
             case "grey":
             case "Grey":
-                CameraBackgroundChange(Color.gray);
-                break;
+                return Color.gray;
             case "green":
             case "Green":
-                CameraBackgroundChange(Color.green);
-                break;
+                return Color.green;
             case "black":
             case "Black":
-                CameraBackgroundChange(Color.black);
-                break;
+                return Color.black;
             case "blue":
             case "Blue":
-                CameraBackgroundChange(Color.blue);
-                break;
+                return Color.blue;
             case "magenta":
             case "Magenta":
-                CameraBackgroundChange(Color.magenta);
-                break;
+                return Color.magenta;
             case "cyan":
             case "Cyan":
-                CameraBackgroundChange(Color.cyan);
-                break;
+                return Color.cyan;
             case "red":
             case "Red":
-                CameraBackgroundChange(Color.red);
-                break;
+                return Color.red;
             case "white":
             case "White":
-                CameraBackgroundChange(Color.white);
-                break;
+                return Color.white;
             case "yellow":
             case "Yellow":
-                CameraBackgroundChange(Color.yellow);
-                break;
+                return Color.yellow;
             default:
-                content.text += "<color=orange>" + "Color not valid." + "</color>" + "\n";
-                inputField.text = "";
-                break;
+                return Color.clear;
         }
     }
 
@@ -396,6 +408,35 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         content.text += $"<color=orange> Background color set to {color}. </color> \n";
         inputField.text = "";
     }
-    
-    
+
+    private void DoCommandPlayerColorModify(string[] words)
+    {
+        // /c
+        var target = words[1];
+        var newColor = StringToColor(words[2]);
+        if (newColor == Color.clear)
+        {
+            content.text += "<color=orange>" + "Color not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
+        else
+        {
+            for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                if (target != PhotonNetwork.PlayerList[i].NickName) continue;
+                var objName = $"Player{i}(Clone)";
+                var obj = GameObject.Find(objName);
+                if (!obj.GetPhotonView().IsMine) break;
+                var objModel = obj.GetComponent<PlayerModel>();
+                var hexColor = ColorUtility.ToHtmlStringRGBA(newColor);
+                objModel.ChangeColor(hexColor);
+                content.text += $"<color=orange> Player color set to {newColor}. </color> \n";
+                inputField.text = "";
+                return;
+            }
+
+            content.text += "<color=orange>" + "Target not valid." + "</color>" + "\n";
+            inputField.text = "";
+        }
+    }
 }
