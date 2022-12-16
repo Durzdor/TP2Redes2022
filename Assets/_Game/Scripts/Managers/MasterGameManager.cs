@@ -89,6 +89,7 @@ public class MasterGameManager : MonoBehaviourPun
         ballObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
+    [PunRPC]
     public void ChangeTeamScore(int score, Goals.TeamGoal team)
     {
         switch (team)

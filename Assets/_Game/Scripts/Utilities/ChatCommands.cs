@@ -52,4 +52,11 @@ public class ChatCommands : MonoBehaviour
 
     public const string TimerModifyDescription =
         "/t or /timer <value> - Use this to change the remaining time in the game to <value> (in seconds)";
+
+    // Background color /bgcolor
+    public const string BackgroundColor = "/bg";
+    public const string BackgroundColorLong = "/background";
+
+    public const string BackgroundColorDescription =
+        "/bg or /background <color> - Use this to change the background color to \n black blue grey green magenta cyan red white yellow <color>";
 }

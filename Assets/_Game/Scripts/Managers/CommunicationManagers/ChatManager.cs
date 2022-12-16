@@ -5,6 +5,7 @@ using Photon.Chat;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
@@ -34,6 +35,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message)) return;
         var words = message.Split(' ');
 
+        if (SceneManager.GetActiveScene().buildIndex != 2) return;
+
+        //Gameplay commands
         if (words.Length == 3 && (words[0] == ChatCommands.MoveSpeed || words[0] == ChatCommands.MoveSpeedLong))
         {
             DoCommandMoveSpeed(words);
@@ -48,6 +52,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         {
             DoCommandGoalModify(words);
         }
+        else if (words.Length == 2 &&
+                 (words[0] == ChatCommands.TimerModify || words[0] == ChatCommands.TimerModifyLong))
+        {
+            DoCommandTimerModify(words);
+        }
+        // Local commands?
         else if (words.Length > 2 && (words[0] == ChatCommands.Whisper || words[0] == ChatCommands.WhisperLong))
         {
             DoCommandWhisper(words);
@@ -57,9 +67,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             DoCommandMute(words);
         }
         else if (words.Length == 2 &&
-                 (words[0] == ChatCommands.TimerModify || words[0] == ChatCommands.TimerModifyLong))
+                 (words[0] == ChatCommands.BackgroundColor || words[0] == ChatCommands.BackgroundColorLong))
         {
-            DoCommandTimerModify(words);
+            DoCommandBackgroundColorModify(words);
         }
         else if (words[0] == ChatCommands.Help || words[0] == ChatCommands.HelpLong)
         {
@@ -189,12 +199,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (_mutedPlayers.Contains(target))
         {
             _mutedPlayers.Remove(target);
-            content.text += target + " " + "is no longer Muted!" + "\n";
+            content.text += $"<color=orange> {target} is no longer muted! </color> \n";
             return;
         }
 
         _mutedPlayers.Add(target);
-        content.text += target + " " + "is now Muted!" + "\n";
+        content.text += $"<color=orange> {target} is muted! </color> \n";
     }
 
     private void DoCommandHelp()
@@ -215,6 +225,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                                               + ChatCommands.GoalModifyDescription +
                                               "\n"
                                               + ChatCommands.TimerModifyDescription +
+                                              "\n"
+                                              + ChatCommands.BackgroundColorDescription +
                                               "\n";
     }
 
@@ -281,7 +293,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         for (var i = 1; i < PhotonNetwork.PlayerList.Length; i++)
         {
             var playerNickname = PhotonNetwork.PlayerList[i].NickName;
-            content.text += $"{i}) {playerNickname} \n";
+            content.text += $"{i})<color=orange>{playerNickname}</color> \n";
         }
 
         inputField.text = "";
@@ -294,8 +306,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         {
             if (int.TryParse(words[2], out var extraGoals))
             {
-                MasterGameManager.Instance.ChangeTeamScore(extraGoals, teamEnum);
-                content.text += $"{teamEnum} got {extraGoals} extra goals. \n";
+                MasterGameManager.Instance.RPCMasterCall("ChangeTeamScore", extraGoals, teamEnum);
+                //MasterGameManager.Instance.ChangeTeamScore(extraGoals, teamEnum);
+                content.text += $"<color=orange> {teamEnum} got {extraGoals} extra goals. </color> \n";
                 inputField.text = "";
             }
             else
@@ -327,4 +340,62 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             inputField.text = "";
         }
     }
+
+    private void DoCommandBackgroundColorModify(string[] words)
+    {
+        // /bg
+        // black blue grey green magenta cyan red white yellow
+        switch (words[1])
+        {
+            case "grey":
+            case "Grey":
+                CameraBackgroundChange(Color.gray);
+                break;
+            case "green":
+            case "Green":
+                CameraBackgroundChange(Color.green);
+                break;
+            case "black":
+            case "Black":
+                CameraBackgroundChange(Color.black);
+                break;
+            case "blue":
+            case "Blue":
+                CameraBackgroundChange(Color.blue);
+                break;
+            case "magenta":
+            case "Magenta":
+                CameraBackgroundChange(Color.magenta);
+                break;
+            case "cyan":
+            case "Cyan":
+                CameraBackgroundChange(Color.cyan);
+                break;
+            case "red":
+            case "Red":
+                CameraBackgroundChange(Color.red);
+                break;
+            case "white":
+            case "White":
+                CameraBackgroundChange(Color.white);
+                break;
+            case "yellow":
+            case "Yellow":
+                CameraBackgroundChange(Color.yellow);
+                break;
+            default:
+                content.text += "<color=orange>" + "Color not valid." + "</color>" + "\n";
+                inputField.text = "";
+                break;
+        }
+    }
+
+    private void CameraBackgroundChange(Color color)
+    {
+        foreach (var cam in Camera.allCameras) cam.backgroundColor = color;
+        content.text += $"<color=orange> Background color set to {color}. </color> \n";
+        inputField.text = "";
+    }
+    
+    
 }
